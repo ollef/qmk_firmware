@@ -47,9 +47,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 uint8_t mods = get_mods();
                 pressed_keycode = KC_HOME;
                 if (mods & MOD_MASK_SHIFT) {
+                    clear_mods();
                     pressed_keycode = KC_END;
                 }
                 register_code(pressed_keycode);
+                set_mods(mods);
             }
             else {
                 unregister_code(pressed_keycode);
