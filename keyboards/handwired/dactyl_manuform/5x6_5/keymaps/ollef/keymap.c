@@ -19,6 +19,7 @@ const keypos_t hand_swap_config[MATRIX_ROWS][MATRIX_COLS] = {
 
 enum custom_keycodes {
     BSPC_DEL = SAFE_RANGE,
+    HOME_END,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -40,6 +41,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         }
+        case HOME_END: {
+            static uint16_t pressed_keycode = KC_NO;
+            if (record->event.pressed) {
+                uint8_t mods = get_mods();
+                pressed_keycode = KC_HOME;
+                if (mods & MOD_MASK_SHIFT) {
+                    pressed_keycode = KC_END;
+                }
+                register_code(pressed_keycode);
+            }
+            else {
+                unregister_code(pressed_keycode);
+            }
+
+            return false;
+        }
     }
     return true;
 }
@@ -56,8 +73,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
     [1] = LAYOUT_5x6_5(
         KC_F12, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
-        _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-        KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5,                     KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS,
+        _______, _______, _______, _______, _______, _______,     _______, KC_PGUP, _______, _______, KC_PSCREEN, _______,
+        _______, _______, _______, KC_PGDOWN, _______, HOME_END,  KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______, _______,
         _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
                  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______,
                                             _______, _______,     _______, _______
